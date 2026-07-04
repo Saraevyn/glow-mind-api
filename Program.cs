@@ -3,7 +3,19 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
+const string CorsPolicyName = "GlowMindCors";
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 var port = Environment.GetEnvironmentVariable("PORT");
@@ -11,6 +23,8 @@ if (int.TryParse(port, out var parsedPort))
 {
     app.Urls.Add($"http://0.0.0.0:{parsedPort}");
 }
+
+app.UseCors(CorsPolicyName);
 
 var opinioesDaSara = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 {
@@ -45,6 +59,9 @@ var encostos = new HashSet<string>(StringComparer.Ordinal)
     NormalizeName("matheus araujo")
 };
 
+app.MapMethods("/{*path}", new[] { "OPTIONS" }, () => Results.Ok())
+    .RequireCors(CorsPolicyName);
+
 app.MapGet("/", () => Results.Ok(new
 {
     service = "glow-mind-api",
@@ -53,9 +70,11 @@ app.MapGet("/", () => Results.Ok(new
         "/opiniao/{nome}",
         "/health"
     }
-}));
+}))
+    .RequireCors(CorsPolicyName);
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }))
+    .RequireCors(CorsPolicyName);
 
 app.MapGet("/opiniao/{nome}", (string nome) =>
 {
@@ -92,7 +111,8 @@ app.MapGet("/opiniao/{nome}", (string nome) =>
         false,
         false,
         $"Sara ainda nao tem uma opiniao sobre {nomeLimpo.ToLowerInvariant()}."));
-});
+})
+    .RequireCors(CorsPolicyName);
 
 app.Run();
 
