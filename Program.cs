@@ -41,6 +41,7 @@ var opinioesDaSara = new Dictionary<string, string>(StringComparer.OrdinalIgnore
     ["diego"] = "O Diego e animado, divertido e a gente compartilha uns gostos muito especificos.",
     ["henrique"] = "O Henrique e dedicado, educado e bastante agradavel.",
     ["henrique delegrego"] = "O Henrique Delegrego e um professor elegante, observador e bem respeitavel.",
+    ["gregory"] = "O Gregory e engracado, bobalhao, dedicado e tem o costume de dormir em lugares diferenciados.",
     ["katheriny"] = "A Katheriny e graciosa, estilosa e cheia de charme.",
     ["marcio"] = "O Marcio e um professor bem parceiro, legal e muito gente boa.",
     ["pablo"] = "O Pablo e quietao na dele, observador e de boa.",
@@ -57,6 +58,16 @@ var opinioesNormalizadas = opinioesDaSara.ToDictionary(
 var encostos = new HashSet<string>(StringComparer.Ordinal)
 {
     NormalizeName("matheus araujo")
+};
+
+var divas = new HashSet<string>(StringComparer.Ordinal)
+{
+    NormalizeName("brenda"),
+    NormalizeName("ana"),
+    NormalizeName("karize"),
+    NormalizeName("beatriz"),
+    NormalizeName("katheriny"),
+    NormalizeName("maria leticia")
 };
 
 app.MapMethods("/{*path}", new[] { "OPTIONS" }, () => Results.Ok())
@@ -92,6 +103,7 @@ app.MapGet("/opiniao/{nome}", (string nome) =>
             FormatDisplayName(opiniaoExata.Key),
             true,
             encostos.Contains(nomeNormalizado),
+            divas.Contains(nomeNormalizado),
             opiniaoExata.Value));
     }
 
@@ -103,11 +115,13 @@ app.MapGet("/opiniao/{nome}", (string nome) =>
             FormatDisplayName(opiniaoParecida.Key),
             true,
             encostos.Contains(melhorCorrespondencia),
+            divas.Contains(melhorCorrespondencia),
             opiniaoParecida.Value));
     }
 
     return Results.Ok(new OpiniaoResponse(
         nomeLimpo,
+        false,
         false,
         false,
         $"Sara ainda nao tem uma opiniao sobre {nomeLimpo.ToLowerInvariant()}."));
@@ -218,4 +232,4 @@ static string FormatDisplayName(string value)
             .Select(part => char.ToUpperInvariant(part[0]) + part[1..]));
 }
 
-internal sealed record OpiniaoResponse(string Nome, bool Conhecido, bool Encosto, string Opiniao);
+internal sealed record OpiniaoResponse(string Nome, bool Conhecido, bool Encosto, bool Diva, string Opiniao);
