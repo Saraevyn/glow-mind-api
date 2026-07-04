@@ -1,0 +1,7 @@
+.git
+.gitignore
+.agents
+bin
+obj
+out
+README.md
