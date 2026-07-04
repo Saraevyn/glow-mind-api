@@ -46,8 +46,8 @@ var opinioesDaSara = new Dictionary<string, string>(StringComparer.OrdinalIgnore
     ["marcio"] = "O Marcio e um professor bem parceiro, legal e muito gente boa.",
     ["pablo"] = "O Pablo e quietao na dele, observador e de boa.",
     ["rafael"] = "O Rafael e centrado, respeitoso e inspirador.",
-    ["maria leticia"] = "A Maria Leticia e doce, sofisticada e encantadora.",
-    ["matheus araujo"] = "O Matheus Araujo tem uma personalidade forte e exige bastante paciencia no dia a dia."
+    ["maria"] = "A Maria Leticia e doce, sofisticada e encantadora.",
+    ["matheus"] = "O Matheus tem uma personalidade forte e exige bastante paciencia no dia a dia."
 };
 
 var opinioesNormalizadas = opinioesDaSara.ToDictionary(
@@ -57,7 +57,7 @@ var opinioesNormalizadas = opinioesDaSara.ToDictionary(
 
 var encostos = new HashSet<string>(StringComparer.Ordinal)
 {
-    NormalizeName("matheus araujo")
+    NormalizeName("matheus")
 };
 
 var divas = new HashSet<string>(StringComparer.Ordinal)
@@ -67,7 +67,7 @@ var divas = new HashSet<string>(StringComparer.Ordinal)
     NormalizeName("karize"),
     NormalizeName("beatriz"),
     NormalizeName("katheriny"),
-    NormalizeName("maria leticia")
+    NormalizeName("maria")
 };
 
 app.MapMethods("/{*path}", new[] { "OPTIONS" }, () => Results.Ok())
